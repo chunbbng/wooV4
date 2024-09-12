@@ -1,0 +1,207 @@
+/* index.css */
+
+/* 폼 컨테이너 스타일 */
+.form-container {
+    margin-top: 450px; /* centered-text와의 간격을 늘리기 위해 상단 마진 추가 */
+    width: auto; /* 부모 요소의 너비를 자동으로 조정 */
+}
+
+/* 질문 레이블과 입력 필드를 가로로 배치 */
+.form-group {
+    display: flex; /* 레이블과 입력 필드를 가로로 배치 */
+    align-items: center; /* 수직으로 중앙 정렬 */
+    margin-bottom: 80px; /* 각 질문 그룹 사이의 간격 */
+}
+
+/* 질문 텍스트의 크기 조정 */
+.form-group label {
+    font-size: 25px; /* 질문 텍스트 크기 */
+    margin-right: 80px; /* 레이블과 입력 필드 사이의 간격 */
+    padding-left: 40px; /* 전체 폼의 왼쪽에 공백 추가 */
+}
+
+/* 입력 필드의 크기 조정 */
+.form-group input[type="text"],
+.form-group input[type="date"],
+.form-group input[type="range"] {
+    width: 300px; /* 입력 필드의 너비를 조정 */
+    padding: 10px; /* 입력 필드 내부의 여백 */
+    font-size: 18px; /* 텍스트 크기 */
+    box-sizing: border-box; /* 패딩을 포함한 너비 계산 */
+    text-align: center; /* 텍스트를 가운데 정렬 */
+}
+
+/* 슬라이더의 크기 조정 */
+.form-group input[type="range"] {
+    width: 400px; /* 슬라이더의 너비를 조정 */
+}
+
+/* 제출 버튼의 크기 조정 */
+.form-container button[type="submit"] {
+    padding: 15px 30px; /* 버튼의 내부 여백을 늘려 크기 증가 */
+    font-size: 22px; /* 버튼의 글자 크기 조정 */
+    cursor: pointer; /* 마우스를 올렸을 때 포인터로 변경 */
+    background-color: #007bff; /* 버튼 배경색 */
+    color: white; /* 버튼 텍스트 색상 */
+    border: none; /* 버튼 테두리 제거 */
+    border-radius: 5px; /* 모서리를 둥글게 */
+}
+
+/* 선호 시간대 선택 요소의 크기 조정 */
+.time-preference .time-option {
+    font-size: 20px; /* 시간대 옵션의 글자 크기 */
+    padding: 15px 25px; /* 시간대 옵션의 내부 여백 */
+    border-radius: 8px; /* 모서리를 둥글게 */
+    cursor: pointer; /* 마우스를 올렸을 때 포인터로 변경 */
+    transition: background-color 0.3s ease; /* 배경색 전환 애니메이션 */
+}
+
+.time-preference .time-option.selected {
+    background-color: #20a3ee; /* 선택된 시간대의 배경색 */
+    color: #fff; /* 선택된 시간대의 글자 색상 */
+}
+
+/* 아이콘 추가 */
+.question-icon::before {
+    content: '';
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><polygon points="50,0 100,50 50,100 0,50" style="fill:%2300d9ff"/></svg>');
+    background-size: contain;
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+/* Flatpickr 달력 크기 및 내부 요소 조정 */
+.flatpickr-calendar {
+    font-size: 18px !important;
+    width: 320px !important; /* 달력 너비 조정 */
+    max-width: 320px !important; /* 최대 너비 설정 */
+    min-width: 320px !important; /* 최소 너비 설정 */
+    height: auto;
+    text-align: center; /* 내부 텍스트 가운데 정렬 */
+}
+
+.flatpickr-day {
+    height: 40px !important; /* 날짜 셀 높이 증가 */
+    width: 40px !important; /* 날짜 셀 너비 증가 */
+    line-height: 40px !important; /* 날짜 셀 텍스트 수직 정렬 */
+}
+
+.flatpickr-months {
+    margin-bottom: 10px; /* 월/년도 섹션 하단 여백 */
+    display: flex;
+    justify-content: center; /* 월/년도 섹션 중앙 정렬 */
+}
+
+.flatpickr-weekdays span {
+    font-size: 18px !important;
+    display: inline-block;
+    width: 40px !important; /* 요일 셀 너비 조정 */
+}
+
+.flatpickr-current-month {
+    font-size: 22px !important;
+    margin-bottom: 10px; /* 월/년도 텍스트 크기 및 하단 여백 */
+}
+
+.flatpickr-current-month .flatpickr-prev-month,
+.flatpickr-current-month .flatpickr-next-month {
+    font-size: 22px !important; /* 화살표 크기 증가 */
+    padding: 10px !important; /* 화살표 버튼의 클릭 영역 확장 */
+}
+
+.flatpickr-current-month .flatpickr-prev-month svg,
+.flatpickr-current-month .flatpickr-next-month svg {
+    width: 24px !important; /* 화살표 아이콘 크기 증가 */
+    height: 24px !important;
+}
+
+/* 연도 조절 부분의 패딩 조정 */
+.flatpickr-current-month .numInputWrapper {
+    padding: 5px 15px !important; /* 패딩을 좌우로 추가 */
+    font-size: 20px; /* 글자 크기 조정 */
+}
+
+/* 전체 달력의 폰트 크기 조정 */
+.flatpickr-current-month {
+    font-size: 22px !important; /* 연도 및 월 텍스트 크기 증가 */
+    padding: 10px 0; /* 연도 및 월 섹션의 상하 패딩 조정 */
+}
+
+.animation-container {
+    position: absolute; /* 절대 위치 지정 */
+    right: 5%; /* 우측 여백을 25%로 설정하여 중앙 쪽으로 이동 */
+    top: 50%; /* 수직 중앙에 위치 */
+    transform: translateY(-50%); /* 수직 중앙 정렬 */
+}
+
+.animation {
+    width: 750px; /* GIF의 너비를 조정 */
+    height: auto; /* 비율에 따라 높이를 자동으로 조정 */
+}
+
+/* 스트레스 슬라이더 스타일 */
+#stressSlider {
+    position: absolute;
+    top: 50%;
+    left: 10px; /* 세로로 긴 막대를 가운데로 */
+    transform: translateY(-50%) rotate(270deg); /* 수직 가운데 정렬 및 회전 */
+    width: 350px;
+    height: 40px;
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    outline: none;
+    z-index: 2; /* 슬라이더를 이미지 위에 표시 */
+}
+
+#stressSlider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 10px;  /* 짧은 가로 막대로 설정 */
+    height: 30px; /* 높이를 줄여 가로 막대 모양으로 변경 */
+    background: red;
+    cursor: pointer;
+    border-radius: 2px; /* 막대 끝부분을 둥글게 */
+}
+
+#stressSlider::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 5px;
+    background: grey;
+}
+
+#stressLevel {
+    color: black;
+    margin-top: 20px;
+    text-align: center;
+}
+
+/* 스트레스 컨테이너 스타일 */
+.stress-container {
+    position: relative;
+    width: 400px;
+    height: 600px;
+    margin-top: 40px; /* 질문과 스트레스 컨테이너 사이의 간격을 조정 */
+    margin-left: 20px; /* 왼쪽 여백을 추가하여 질문과 이미지 사이의 간격을 조정 */
+}
+
+#stressCanvas {
+    position: absolute;
+    top: 0;
+    left: 45%; /* 캔버스를 사람 중앙에 위치시키기 위해 */
+    transform: translateX(-50%); /* 수평 가운데 정렬 */
+    z-index: 1; /* 캔버스를 슬라이더 아래에 표시 */
+}
+
+/* 시간 옵션 스타일 */
+.time-option {
+    display: inline-block;
+    padding: 10px 20px; /* 패딩을 늘려 버튼 크기를 키움 */
+    border: 1px solid grey; /* 회색 테두리 추가 */
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s;
+    border-radius: 5px; /* 테두리에 약간의 둥근 모서리 추가 */
+}

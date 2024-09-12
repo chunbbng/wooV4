@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Calendar</title>
+    <link rel="stylesheet" href="/css/header.css"> <!-- 헤더 CSS 파일 -->
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+</head>
+<body>
+
+<!-- 헤더 섹션 추가 -->
+<div class="header">
+    <h1>Plan Optima</h1>
+    <div class="spacer"></div>
+    <ul class="menu">
+        <li><a href="/cabinet">Cabinet</a></li>
+        <li><a href="/calendar">Calendar</a></li>
+        <li><a href="#">Check</a></li>
+        <li><a href="#">About</a></li>
+    </ul>
+    <div id="headerLogout" class="logout-button" th:if="${session.memberId}">로그아웃</div>
+    <div class="login-container" th:if="${session.memberId == null}">
+        <button id="toggleLogin" class="login-button">로그인</button>
+    </div>
+</div>
+
+<h1>캘린더</h1>
+<div id='calendar' style="max-width: 900px; margin: 0 auto;"></div>
+
+<script th:inline="javascript">
+    document.addEventListener('DOMContentLoaded', function() {
+        // 스케줄 데이터를 서버에서 받아옵니다.
+        const schedules = /*[[${schedules}]]*/ '[]'; // 서버에서 받아온 스케줄 데이터
+
+        // 서버에서 받은 JSON 데이터를 JavaScript 객체로 변환
+        const scheduleData = JSON.parse(schedules);
+
+        // 랜덤 색상 생성 함수
+        function getRandomColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        // FullCalendar 초기화
+        const calendarEl = document.getElementById('calendar');
+        const calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            events: scheduleData.flatMap(dto => {
+                // 랜덤 색상 생성
+                const color = getRandomColor();
+
+                // 각 일정 객체를 FullCalendar 이벤트로 변환
+                return dto.selectedDates.map(date => ({
+                    title: dto.title,
+                    start: date,
+                    end: date,
+                    color: color // 랜덤 색상 설정
+                }));
+            })
+        });
+
+        // 캘린더 렌더링
+        calendar.render();
+    });
+</script>
+<script src="/js/auth.js"></script> <!-- auth.js 추가 -->
+</body>
+</html>

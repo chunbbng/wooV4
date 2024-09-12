@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Result</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+        }
+        .hidden-login {
+            display: none;
+            margin-top: 10px;
+            color: red;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="recommendation-section">
+        <h2>추천 일정</h2>
+        <p>"<span th:text="${schedule.name}" id="scheduleName"></span>" 일정을</p>
+        <p><span th:text="${adjustDays}"></span> 일 동안</p>
+        <p>하루 <span th:text="${adjustTime}"></span> 시간 할애해서</p>
+        <p>마무리하기를 추천드릴게요.</p>
+    </div>
+
+    <!-- 로그인 여부에 따라 버튼과 메시지를 렌더링 -->
+    <div th:if="${loginMember != null}">
+        <button id="selectDateButton">날짜 선택하기</button>
+    </div>
+    <div th:if="${loginMember == null}" id="loginMessage" style="color: red; cursor: pointer;" onclick="window.location.href='/login'">
+        로그인이 필요합니다. 로그인하려면 여기를 클릭하세요.
+    </div>
+
+    <p th:if="${loginMember != null}">환영합니다, <span th:text="${loginMember.name}"></span>님!</p>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const selectDateButton = document.getElementById("selectDateButton");
+        const loginMemberExists = document.getElementById("selectDateButton") !== null;
+        const loginId = /*[[${loginMember.loginId}]]*/ '[[${loginMember.loginId}]]';
+        const scheduleId = /*[[${schedule.id}]]*/ '[[${schedule.id}]]';
+
+        console.log("JavaScript loaded. loginMemberExists:", loginMemberExists);
+        console.log("loginId:", loginId);
+        console.log("scheduleId:", scheduleId);
+
+        if (loginMemberExists) {
+            selectDateButton.addEventListener("click", function() {
+                console.log("Button clicked. Redirecting...");
+                window.location.href = `/calendarCheck/${loginId}/${scheduleId}`;
+            });
+        } else {
+            console.log("Button clicked, but user is not logged in.");
+        }
+    });
+</script>
+</body>
+</html>

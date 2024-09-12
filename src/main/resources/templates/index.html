@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plan Optima</title>
+    <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="/css/header.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+</head>
+
+<body>
+<!-- 헤더 섹션 -->
+<div th:fragment="header">
+    <div class="header">
+        <h1>Plan Optima</h1>
+        <div class="spacer"></div>
+        <ul class="menu">
+            <li><a th:href="@{/cabinet}">Cabinet</a></li>
+            <li><a href="/calendar">Calendar</a></li>
+            <li><a href="#">Check</a></li>
+            <li><a href="#">About</a></li>
+        </ul>
+    </div>
+</div>
+<div id="headerLogout" class="logout-button">로그아웃</div>
+
+<div class="centered-text">
+    <h2>Plan Optima를 통해 <br> 나만의 효율적인 일정을 <br> 계획해 보세요</h2>
+</div>
+
+<div class="login-container">
+    <button id="toggleLogin" class="login-button">로그인</button>
+</div>
+
+<div id="loginBanner" class="login-banner">
+    <form id="authForm" method="post">
+        <!-- 로그인 필드 -->
+        <div id="login-fields">
+            <div class="form-group">
+                <label for="username">아이디 :</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">비밀번호 :</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+        </div>
+        <!-- 회원가입 필드 -->
+        <div id="signup-fields" style="display: none;">
+            <div class="form-group">
+                <label for="signupName">이름 :</label>
+                <input type="text" id="signupName" name="name">
+            </div>
+        </div>
+        <!-- 버튼 컨테이너 -->
+        <div class="buttons-container">
+            <button type="button" id="loginButton">확인</button>
+            <button type="button" id="signupButton">회원가입</button>
+        </div>
+        <div id="message"></div>
+    </form>
+</div>
+
+<div class="animation-container">
+    <img id="myGif" src="image/index.gif" alt="Animation" class="animation">
+</div>
+
+<form th:action="@{/create}" method="post" class="form-container">
+    <!-- 폼 필드들 -->
+    <div class="form-group">
+        <label class="question-icon">스케줄명을 적어주세요</label>
+        <input type="text" id="name" name="name" autocomplete="off" required>
+    </div>
+    <div class="form-group">
+        <label class="question-icon">시작 날짜를 입력해 주세요</label>
+        <input type="text" id="startTime" name="startTime" required>
+    </div>
+    <div class="form-group">
+        <label class="question-icon">데드라인을 기입해 주세요</label>
+        <input type="text" id="deadLine" name="deadLine" required>
+    </div>
+    <div class="form-group">
+        <label class="question-icon">내가 생각하는 작업 난이도?</label>
+        <input type="range" id="difficulty" name="difficulty" min="1" max="10" autocomplete="off" required>
+    </div>
+    <div class="form-group">
+        <label class="question-icon">원하는 휴식시간 정도?</label>
+        <input type="text" id="restTime" name="restTime" autocomplete="off" required>
+    </div>
+    <div class="form-group">
+        <label class="question-icon">내가 생각하는 우선순위?</label>
+        <canvas id="priorityCanvas" width="400" height="400"></canvas>
+        <input type="hidden" id="importance" name="importance" value="">
+        <input type="hidden" id="urgency" name="urgency" value="">
+    </div>
+    <div class="form-group">
+        <label class="question-icon">작업 관련 스트레스 수준?</label>
+        <div class="stress-container">
+            <canvas id="stressCanvas" width="400" height="600"></canvas>
+            <input type="range" id="stressSlider" name="stress" min="1" max="10" step="1" value="1" orient="vertical" required>
+            <div id="stressValue">스트레스 수준</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="question-icon">작업 선호 시간대</label>
+        <div class="time-preference">
+            <div class="time-option" data-time="새벽">새벽</div>
+            <div class="time-option" data-time="아침">아침</div>
+            <div class="time-option" data-time="점심">점심</div>
+            <div class="time-option" data-time="저녁">저녁</div>
+            <div class="time-option" data-time="밤">밤</div>
+        </div>
+        <input type="hidden" id="preferenceTime" name="preferenceTime" required>
+    </div>
+    <div>
+        <button type="submit">제출</button>
+    </div>
+</form>
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="/js/index.js"></script>
+<script src="/js/stress.js"></script>
+<script src="/js/timePreference.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="/js/flatpickr.js"></script> <!-- 새로 만든 스크립트 추가 -->
+<script src="/js/auth.js"></script>
+</body>
+
+</html>

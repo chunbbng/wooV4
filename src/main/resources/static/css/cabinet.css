@@ -1,0 +1,91 @@
+/* 기본 스타일 */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #333;
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* 사이트 이름 스타일 */
+.site-name {
+    font-size: 24px;
+}
+
+/* 내비게이션 스타일 */
+nav {
+    flex-grow: 1; /* 내비게이션이 가능한 공간을 채우도록 설정 */
+}
+
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: flex-end; /* 메뉴 항목을 오른쪽 정렬 */
+}
+
+nav ul li {
+    margin-right: 20px;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+}
+
+nav ul li a:hover {
+    text-decoration: underline;
+}
+
+main {
+    max-width: 800px;
+    margin: 20px auto;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+
+.schedule-box h3 {
+    margin: 0;
+    color: #333;
+}
+
+.schedule-box p {
+    margin: 5px 0;
+    color: #666;
+}
+
+.schedule-box {
+    border: 2px solid #4d4d4d; /* 기본 테두리 */
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    transition: border-width 0.3s ease, border-color 0.3s ease; /* 테두리 굵기 및 색상 변화를 부드럽게 */
+}
+
+.schedule-box.blink {
+    border-width: 4px; /* 마우스 오버 시 테두리를 굵게 */
+    border-color: #000000; /* 테두리 색상 변경 */
+}
+
+@keyframes blink-border {
+    0% { border-color: #4d4d4d; } /* 기본 테두리 색상 */
+    50% { border-color: yellow; } /* 깜빡일 때 색상 */
+    100% { border-color: #4d4d4d; } /* 기본 테두리 색상 */
+}

@@ -6,14 +6,14 @@ body {
     padding: 0;
 }
 
-header {
-    background-color: #333;
-    color: white;
-    padding: 10px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
+/*header {*/
+/*    background-color: #333;*/
+/*    color: white;*/
+/*    padding: 10px 20px;*/
+/*    display: flex;*/
+/*    justify-content: space-between;*/
+/*    align-items: center;*/
+/*}*/
 
 /* 사이트 이름 스타일 */
 .site-name {
@@ -22,7 +22,7 @@ header {
 
 /* 내비게이션 스타일 */
 nav {
-    flex-grow: 1; /* 내비게이션이 가능한 공간을 채우도록 설정 */
+    flex-grow: 1;
 }
 
 nav ul {
@@ -30,7 +30,7 @@ nav ul {
     margin: 0;
     padding: 0;
     display: flex;
-    justify-content: flex-end; /* 메뉴 항목을 오른쪽 정렬 */
+    justify-content: flex-end;
 }
 
 nav ul li {
@@ -60,7 +60,6 @@ h1 {
     color: #333;
 }
 
-
 .schedule-box h3 {
     margin: 0;
     color: #333;
@@ -72,20 +71,58 @@ h1 {
 }
 
 .schedule-box {
-    border: 2px solid #4d4d4d; /* 기본 테두리 */
+    border: 2px solid #4d4d4d;
     padding: 10px;
     margin-bottom: 10px;
     border-radius: 4px;
-    transition: border-width 0.3s ease, border-color 0.3s ease; /* 테두리 굵기 및 색상 변화를 부드럽게 */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative; /* 위치 고정 */
+    transition: border-width 0.3s ease, border-color 0.3s ease;
+}
+
+.schedule-box .schedule-text {
+    flex-grow: 1;
+    display: flex;
+    justify-content: flex-start; /* 텍스트를 왼쪽에 고정 */
 }
 
 .schedule-box.blink {
-    border-width: 4px; /* 마우스 오버 시 테두리를 굵게 */
-    border-color: #000000; /* 테두리 색상 변경 */
+    border-width: 4px;
+    border-color: #000000;
 }
 
 @keyframes blink-border {
-    0% { border-color: #4d4d4d; } /* 기본 테두리 색상 */
-    50% { border-color: yellow; } /* 깜빡일 때 색상 */
-    100% { border-color: #4d4d4d; } /* 기본 테두리 색상 */
+    0% { border-color: #4d4d4d; }
+    50% { border-color: yellow; }
+    100% { border-color: #4d4d4d; }
+}
+
+/* 체크박스 기본적으로 숨김 */
+.checkbox {
+    display: none;
+}
+
+/* 체크모드 활성화 시 체크박스를 보이게 설정 */
+.checkbox-enabled .checkbox {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    position: absolute;
+    right: 10px; /* 오른쪽 끝으로 배치 */
+    cursor: pointer;
+}
+
+/* 체크박스 활성화 상태일 때 스케줄 박스의 레이아웃 */
+.checkbox-enabled .schedule-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-right: 40px; /* 체크박스 오른쪽에 공간 확보 */
+}
+
+.checkbox-enabled .schedule-box:hover {
+    border-width: 3px;
+    border-color: #888;
 }

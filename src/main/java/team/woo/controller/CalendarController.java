@@ -2,22 +2,20 @@ package team.woo.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.ui.Model;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import team.woo.domain.Schedule;
 import team.woo.domain.ScheduleRepository;
 import team.woo.domain.ScheduleService;
 import team.woo.dto.CalendarDTO;
 import team.woo.member.Member;
+import team.woo.member.MemberRepository;
 import team.woo.session.SessionManager;
 
 import java.util.ArrayList;
@@ -32,6 +30,7 @@ public class CalendarController {
 
     private final SessionManager sessionManager;
     private final ScheduleService scheduleService;
+    private final MemberRepository memberRepository;
     private final ScheduleRepository scheduleRepository;
 
     @PostMapping("/calendar")
@@ -86,6 +85,60 @@ public class CalendarController {
         return "calendar";
     }
 
+    @GetMapping("/calendarCheck/{loginId}/{id}")
+    public String calendarCheck(@PathVariable String loginId, @PathVariable Long id, Model model) {
+        Member member = memberRepository.findByLoginId(loginId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid loginId: " + loginId));
+
+        Schedule schedule = scheduleRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid schedule Id: " + id));
+
+        model.addAttribute("schedule", schedule);
+        model.addAttribute("loginId", member.getLoginId());
+        model.addAttribute("adjustDays", schedule.getAdjustDays());
+        model.addAttribute("adjustTime", schedule.getAdjustTime());
+        model.addAttribute("startTime", schedule.getStartTime());
+        model.addAttribute("deadLine", schedule.getDeadLine());
+        model.addAttribute("id", id);
+        model.addAttribute("scheduleName", schedule.getName());
+
+        return "calendarCheck";
+    }
 
 
+    @GetMapping("/calendarChecked/{loginId}/{checkedId}")
+    public String calendarChecked(@PathVariable String loginId, @PathVariable Long checkedId, Model model) throws JsonProcessingException {
+        Member member = memberRepository.findByLoginId(loginId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid loginId: " + loginId));
+
+        List<Schedule> schedules = scheduleRepository.findByMemberId(member.getId());
+        Schedule checkedSchedule = scheduleRepository.findById(checkedId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid schedule Id: " + checkedId));
+
+        // ObjectMapper 설정
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule()); // Java 8 날짜/시간 모듈 등록
+
+        // Schedule 객체에서 startTime과 endTime을 제외한 데이터 생성
+        List<Map<String, Object>> scheduleList = new ArrayList<>();
+        for (Schedule schedule : schedules) {
+            Map<String, Object> scheduleMap = new HashMap<>();
+            scheduleMap.put("title", schedule.getName());
+            scheduleMap.put("selectedDates", schedule.getSelectedDates()); // 필요한 데이터만 추가
+            scheduleList.add(scheduleMap);
+        }
+
+        Map<String, Object> checkedScheduleMap = new HashMap<>();
+        checkedScheduleMap.put("title", checkedSchedule.getName());
+        checkedScheduleMap.put("selectedDates", checkedSchedule.getSelectedDates()); // 필요한 데이터만 추가
+
+        // JSON으로 변환
+        String schedulesJson = objectMapper.writeValueAsString(scheduleList);
+        String checkedScheduleJson = objectMapper.writeValueAsString(checkedScheduleMap);
+
+        model.addAttribute("schedules", schedulesJson);
+        model.addAttribute("checkedSchedule", checkedScheduleJson);
+
+        return "calendarChecked";
+    }
 }

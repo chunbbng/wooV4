@@ -1,5 +1,6 @@
 package team.woo.controller;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -92,6 +93,33 @@ public class MemberController {
             return message;
         }
     }
+
+    @GetMapping("/status")
+    @ResponseBody
+    public LoginStatusResponse checkLoginStatus(HttpServletRequest request) {
+        Object sessionObject = sessionManager.getSession(request, "member");
+
+        if (sessionObject instanceof Member) {  // Object 타입을 Member로 캐스팅
+            Member loggedInMember = (Member) sessionObject;
+            return new LoginStatusResponse(true, loggedInMember.getName());
+        } else {
+            return new LoginStatusResponse(false, "Not logged in");
+        }
+    }
+
+
+    @Getter
+    static class LoginStatusResponse {
+        private boolean loggedIn;
+        private String name;
+
+        public LoginStatusResponse(boolean loggedIn, String name) {
+            this.loggedIn = loggedIn;
+            this.name = name;
+        }
+
+    }
+
 
     // 내부 클래스: 회원가입 응답을 위한 클래스
     static class SignupResponse {

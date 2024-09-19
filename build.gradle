@@ -30,6 +30,8 @@ dependencies {
     implementation 'org.jsoup:jsoup:1.15.4' // Jsoup 최신 버전을 사용합니다.
 
     implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
+
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.15.2' // 최신 버전 사용
 }
 
 tasks.named('test') {

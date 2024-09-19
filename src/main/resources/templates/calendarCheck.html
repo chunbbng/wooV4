@@ -85,10 +85,13 @@
 <div id='calendar'></div>
 
 <div class="side-label">
-    <span class="icon">✔</span> / <span id="adjustDays" th:text="${adjustDays}"></span>일
+    <span class="icon">✔</span>
+    <span id="adjustDays" th:text="${schedule.getOption() == 'flexible' ? '자유선택' : adjustDays}"></span>
+    <span th:unless="${schedule.getOption() == 'flexible'}">일</span>
     <br>
     <span id="adjustTime" th:text="${adjustTime}"> hours</span>
 </div>
+
 
 <div class="button-container">
     <button id="saveDates" class="save-button">저장 완료</button>
@@ -98,10 +101,15 @@
 <input type="hidden" id="startDate" th:value="${startTime}">
 <input type="hidden" id="endDate" th:value="${deadLine}">
 <input type="hidden" id="scheduleId" th:value="${id}">
+<input type="hidden" id="loginId" th:value="${loginId}">
+<input type="hidden" id="actualAdjustDays" th:value="${adjustDays}">
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const adjustDays = parseInt(document.getElementById('adjustDays').textContent, 10);
+        const adjustDaysText = document.getElementById('adjustDays').textContent;
+        const adjustDays = adjustDaysText === '자유선택'
+            ? parseInt(document.getElementById('actualAdjustDays').value, 10)
+            : parseInt(adjustDaysText, 10);
         const startDateStr = document.getElementById('startDate').value;
         const endDateStr = document.getElementById('endDate').value;
         const scheduleId = document.getElementById('scheduleId').value;
@@ -129,7 +137,7 @@
                     if (selectedDates.length < adjustDays) {
                         selectedDates.push(dateStr);
                     } else {
-                        alert(`최대 ${adjustDays}일까지만 선택할 수 있습니다.`);
+                        alert(`최대 ${adjustDays === Infinity ? '제한 없음' : adjustDays}일까지만 선택할 수 있습니다.`);
                     }
                 }
 
@@ -177,6 +185,9 @@
         }
 
         document.getElementById('saveDates').addEventListener('click', function() {
+            const loginId = document.getElementById('loginId').value;  // 숨겨진 input에서 로그인 ID 가져오기
+            const checkedId = scheduleId;  // 저장할 스케줄 ID
+
             fetch('/calendar', {
                 method: 'POST',
                 headers: {
@@ -190,7 +201,8 @@
                 .then(response => {
                     if (response.ok) {
                         alert("날짜가 성공적으로 저장되었습니다.");
-                        window.location.href = '/calendar';
+                        // 저장이 완료되면 calendarChecked 페이지로 리다이렉트
+                        window.location.href = `/calendarChecked/${loginId}/${checkedId}`;
                     } else {
                         alert("날짜 저장 중 오류가 발생했습니다.");
                     }
@@ -200,7 +212,9 @@
                     alert("날짜 저장 중 오류가 발생했습니다.");
                 });
         });
+
     });
+
 </script>
 
 </body>

@@ -43,7 +43,7 @@ public class HomeController {
     }
 
     @GetMapping("/cabinet")
-    public String cabinet(Model model,HttpServletRequest request) {
+    public String cabinet(Model model,HttpServletRequest request, RedirectAttributes redirectAttributes) {
 
         Member loginMember = (Member) sessionManager.getSession(request, "member");
 
@@ -53,6 +53,7 @@ public class HomeController {
         }
         String loginId = loginMember.getLoginId();
         log.info("loginMember={}", loginId);
+        redirectAttributes.addAttribute("loginMember", loginMember);
         return "redirect:/cabinet/" + loginId;
     }
 
@@ -74,6 +75,7 @@ public class HomeController {
         List<Schedule> schedules = scheduleRepository.findByMemberId(loginMember.getId());
 
         // 모델에 추가합니다
+        model.addAttribute("loginMember", loginMember);
         model.addAttribute("member", member);
         model.addAttribute("schedules", schedules);
         String loginId = member.getLoginId();
@@ -157,24 +159,12 @@ public class HomeController {
             return "redirect:/login";
         }
 
+        model.addAttribute("schedule", schedule);
         model.addAttribute("loginMember", loginMember);
         logger.info("세션 확인: 사용자 ID = {}", loginMember.getId());
 
         return "result_ts";
     }
 
-    @GetMapping("/calendarCheck/{loginId}/{id}")
-    public String calendarCheck(@PathVariable String loginId, @PathVariable Long id, Model model) {
-        Schedule schedule = scheduleRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid schedule Id: " + id));
 
-        model.addAttribute("adjustDays", schedule.getAdjustDays());
-        model.addAttribute("adjustTime", schedule.getAdjustTime());
-        model.addAttribute("startTime", schedule.getStartTime());
-        model.addAttribute("deadLine", schedule.getDeadLine());
-        model.addAttribute("id", id);
-        model.addAttribute("scheduleName", schedule.getName());
-
-        return "calendarCheck";
-    }
 }

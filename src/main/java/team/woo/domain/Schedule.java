@@ -27,6 +27,7 @@ public class Schedule {
     private String restTime;
     private int stress;
     private String preferenceTime;
+    private String option;
 
     @ElementCollection
     private List<String> selectedDates;

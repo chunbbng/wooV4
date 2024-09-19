@@ -13,13 +13,24 @@ body {
 .header {
     display: flex;
     align-items: center;
-    width: 100%;
+    width: 100%; /* 화면 크기에 맞게 조정 */
     padding: 20px 50px;
-    background: #000; /* 이미지와 동일한 배경색 */
+    background: #000;
     position: fixed;
     top: 0;
     left: 0;
-    right: 0;
+    z-index: 1000;
+}
+
+.header-cabinet {
+    display: flex;
+    align-items: center;
+    width: 100%; /* 화면 크기에 맞게 조정 */
+    padding: 20px 50px;
+    background: #000;
+    position: fixed;
+    top: 0;
+    left: 0;
     z-index: 1000;
 }
 
@@ -215,3 +226,8 @@ body {
 .green {
     background-color: #008000;
 }
+
+.centered-text_calendar {
+    text-align: center;
+}
+

@@ -13,8 +13,7 @@ public class TaskAllocation {
 
     // 총 점수를 계산하는 메서드
     public static int calculateTotalScore(int difficulty, int urgency, int importance, int stress) {
-        int totalScore = (difficulty * 2) + (urgency * 3) + (importance * 3) + ((11 - stress) * 1);
-        return totalScore;
+        return (difficulty * 2) + (urgency * 3) + (importance * 3) + ((11 - stress) * 1);
     }
 
     // adjustDays 를 계산하는 메서드
@@ -47,13 +46,13 @@ public class TaskAllocation {
 
     // 분산 일정
     private static int distributeDays(int availableDays) {
-        return (int) (availableDays / 2 + availableDays) / 2;
+        return (availableDays / 2 + availableDays) / 2;
     }
 
     // 유동 일정은 임시
     private static int flexibleDays(int availableDays) {
-        int temple = 1004;
-        return temple;
+        System.out.println("availableDays = " + availableDays);
+        return availableDays + 1;
     }
 
 

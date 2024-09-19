@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cabinet</title>
     <link rel="stylesheet" th:href="@{/css/cabinet.css}">
-    <link rel="stylesheet" th:href="@{/css/index.css}">
     <link rel="stylesheet" th:href="@{/css/header.css}">
     <style>
         /* 기본 스타일 */
@@ -15,23 +14,44 @@
         #process-selection, #delete-selection {
             display: none;
         }
+
+        /* 돌아가기 버튼 컨테이너 스타일 */
+        .back-button-container {
+            text-align: center; /* 버튼을 중앙 정렬 */
+            margin-top: 20px; /* 버튼과 캘린더 사이의 여백 추가 */
+        }
+
+        /* 돌아가기 버튼 스타일 */
+        .back-button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 18px;
+            color: white;
+            background: #3498db; /* 버튼 배경색 */
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background 0.3s ease-in-out;
+        }
+
+        .back-button:hover {
+            background: #2980b9; /* 버튼 호버 시 색상 변경 */
+        }
     </style>
 </head>
 <body>
-<header class="header">
-    <h1><a href="/" th:text="'Plan Optima'"></a></h1>
+<!-- 헤더 섹션 추가 -->
+<div class="header">
+    <h1>Plan Optima</h1>
     <div class="spacer"></div>
-    <nav>
-        <ul class="menu">
-            <li><a th:href="@{/cabinet}">Cabinet</a></li>
-            <li><a href="/calendar">Calendar</a></li>
-            <li><a href="#">Check</a></li>
-            <li><a href="#">About</a></li>
-        </ul>
-    </nav>
-</header>
-
-<div id="headerLogout" class="logout-button">로그아웃</div>
+    <ul class="menu">
+        <li><a th:href="@{/cabinet}">Cabinet</a></li>
+        <li><a href="/calendar">Calendar</a></li>
+        <li><a href="#">Check</a></li>
+        <li><a href="#">About</a></li>
+    </ul>
+    <!-- 로그아웃 버튼 -->
+    <div id="headerLogout" class="logout-button">로그아웃</div>
+</div>
 
 <main>
     <h1>Cabinet</h1>
@@ -56,20 +76,55 @@
         <button type="button" id="delete-selection">선택된 스케줄 삭제</button>
     </form>
 
+    <!-- 돌아가기 버튼 추가 -->
     <div class="back-button-container">
-        <button type="button" onclick="window.history.back();">돌아가기</button>
+        <button type="button" class="back-button" onclick="window.history.back();">돌아가기</button>
     </div>
 </main>
-
 <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const headerLogoutButton = document.getElementById("headerLogout");
+
+        if (!headerLogoutButton) {
+            console.error("로그아웃 버튼 요소가 로드되지 않았습니다.");
+            return;
+        }
+
+        // 로그아웃 버튼 클릭 시 처리
+        headerLogoutButton.addEventListener("click", function () {
+            // 로그아웃 요청을 보냅니다
+            fetch('/auth/logout', { method: 'POST' })
+                .then(() => {
+                    // 로그아웃 후 메인 페이지로 리디렉션
+                    window.location.href = "/"; // 또는 원하는 URL로 변경
+                })
+                .catch(error => {
+                    console.error("로그아웃 오류:", error);
+                });
+        });
+
+        // 항상 로그아웃 버튼 표시
+        headerLogoutButton.style.display = "block";
+    });
+    // 체크모드 활성화/비활성화 버튼
     document.getElementById('toggle-check-mode').addEventListener('click', () => {
-        const checkboxes = document.querySelectorAll('.checkbox');
-        const checkModeEnabled = checkboxes[0].style.display === 'none';
-        checkboxes.forEach(checkbox => checkbox.style.display = checkModeEnabled ? 'inline-block' : 'none');
-        document.getElementById('process-selection').style.display = checkModeEnabled ? 'block' : 'none';
-        document.getElementById('delete-selection').style.display = checkModeEnabled ? 'block' : 'none';
+        const mainElement = document.querySelector('main');
+        const isCheckModeEnabled = mainElement.classList.contains('checkbox-enabled');
+
+        if (isCheckModeEnabled) {
+            // 체크모드 비활성화
+            mainElement.classList.remove('checkbox-enabled');
+            document.getElementById('process-selection').style.display = 'none';
+            document.getElementById('delete-selection').style.display = 'none';
+        } else {
+            // 체크모드 활성화
+            mainElement.classList.add('checkbox-enabled');
+            document.getElementById('process-selection').style.display = 'block';
+            document.getElementById('delete-selection').style.display = 'block';
+        }
     });
 
+    // 선택된 항목 처리 버튼
     document.getElementById('process-selection').addEventListener('click', () => {
         const checkboxes = document.querySelectorAll('.checkbox');
         const selectedIds = Array.from(checkboxes)
@@ -86,7 +141,7 @@
         })
             .then(response => {
                 if (response.redirected) {
-                    window.location.href = response.url; // 서버가 리다이렉트한 URL로 이동
+                    window.location.href = response.url;
                 } else {
                     console.error('Failed to process selection');
                 }
@@ -94,6 +149,7 @@
             .catch(error => console.error('Error:', error));
     });
 
+    // 선택된 항목 삭제 버튼
     document.getElementById('delete-selection').addEventListener('click', () => {
         const checkboxes = document.querySelectorAll('.checkbox');
         const selectedIds = Array.from(checkboxes)
@@ -110,25 +166,23 @@
         })
             .then(response => {
                 if (response.redirected) {
-                    window.location.href = response.url; // 서버가 리다이렉트한 URL로 이동
+                    window.location.href = response.url;
                 } else {
                     console.error('Failed to delete schedules');
                 }
             })
             .catch(error => console.error('Error:', error));
     });
+
+    // 스케줄 박스 클릭 시 상세 페이지로 이동
     document.querySelectorAll('.schedule-box').forEach(box => {
         box.addEventListener('click', (event) => {
-            // 체크박스 클릭은 무시하고, 전체 박스를 클릭했을 때만 상세 페이지로 이동
             if (!event.target.matches('input[type="checkbox"]')) {
                 const scheduleId = box.getAttribute('data-id');
-                window.location.href = `/schedule/${scheduleId}`;  // 이 URL에서 스케줄 상세 정보 페이지를 보여줌
+                window.location.href = `/schedule/${scheduleId}`;
             }
         });
     });
 </script>
-
-<!-- 기존 JavaScript 파일 링크 -->
-<script src="/js/index.js"></script>
 </body>
 </html>

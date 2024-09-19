@@ -113,6 +113,8 @@ public class ScheduleController {
         Schedule schedule = scheduleService.getSchedule(id);
         Member loginMember = (Member) sessionManager.getSession(request, "member");  // 두 번째 인자로 "member" 키를 전달
 
+        schedule.setOption(option);
+
         int totalScore = TaskAllocation.calculateTotalScore(schedule.getDifficulty(), schedule.getUrgency(), schedule.getImportance(), schedule.getStress());
 
         LocalDate deadLine = schedule.getDeadLine();

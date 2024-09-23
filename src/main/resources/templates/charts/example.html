@@ -1,137 +1,223 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <title>ECharts Getting Started Example</title>
-    <!-- ECharts 라이브러리 로드 -->
-    <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
-    <!-- moment.js 라이브러리 로드 -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>24시간 시간대 분할 및 스케줄 표시</title>
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.3.0/dist/echarts.min.js"></script>
 </head>
 <body>
-<!-- 차트를 렌더링할 요소 -->
-<div id="main" style="width: 600px; height: 400px;"></div>
-<div id="schedule-weight" style="width: 600px; height: 400px;"></div>
-<div id="priority" style="width: 600px; height: 400px;"></div>
+<h2>24시간 시간대 분할 및 스케줄 표시</h2>
+<div id="pie-chart" style="width: 1000px; height: 800px;"></div>
+<div id="main" style="width: 600px; height: 400px; margin: 0 auto; margin-bottom: 60px;"></div>
+<div id="priority" style="width: 600px; height: 400px; margin: 0 auto; margin-bottom: 60px;"></div>
 
-<!-- ECharts 초기화 및 설정 -->
 <script th:inline="javascript">
-    let schedules = /*[[${schedules}]]*/ [];
+  // 스케줄 데이터를 컨트롤러에서 전달받습니다.
+  var schedules = /*[[${schedules}]]*/ [];
 
-    let difficultiesValues = [];
-    let priorityValues = [];
-    let scheduleDurations = [];
-    let totalDuration = 0; // 총 지속 시간(밀리초)
+  // 시간대 블록(예: '밤', '새벽') 정의
+  var timeBlocks = {
+    '밤': { start: 0, end: 6 },
+    '새벽': { start: 6, end: 11 },
+    '아침': { start: 11, end: 14 },
+    '점심': { start: 14, end: 19 },
+    '저녁': { start: 19, end: 24 }
+  };
 
-    schedules.forEach(schedule => {
-        // moment.js를 사용하여 날짜와 시간 파싱
-        const startTime = new Date(schedule.startTime);
-        const endTime = new Date(schedule.endTime);
+  // 스케줄 데이터를 차트 데이터로 변환합니다.
+  var pieData = [];
+  var difficultiesValues = [];  // 스트레스 값 배열
+  var priorityValues = [];      // 우선순위 값 배열
 
-        // 두 시간 사이의 차이를 계산 (밀리초 단위)
-        const duration = endTime - startTime;
-        totalDuration += duration; // 총 지속 시간 누적
+  schedules.forEach(schedule => {
+    // 컨트롤러에서 변환된 adjustTime과 restTime을 그대로 사용
+    let totalAdjustTime = schedule.adjustTime;
+    let totalRestTime = schedule.restTime; // 이미 숫자로 변환된 상태
 
-        scheduleDurations.push({
-            value: duration,
-            name: schedule.name // 스케줄의 이름을 차트 항목의 이름으로 사용
-        });
+    // 선호 시간대가 여러 개일 경우 ','로 구분되어 있음
+    let preferredTime = schedule.preferenceTime ? schedule.preferenceTime.split(',') : [];
+    let availableTimeBlock = null;
 
-        // 스트레스 값 추출
-        difficultiesValues.push(schedule.stress);
-
-        // 중요도와 긴급도의 합계 계산
-        let priority = schedule.importance + schedule.urgency;
-        priorityValues.push(priority);
+    pieData.push({
+      name: schedule.name,
+      value: totalAdjustTime,
+      itemStyle: { color: '#FF6347' } // 스케줄 시간의 색상 설정
     });
 
-    console.log("Total Duration (in milliseconds):", totalDuration);
-    console.log("Difficulty Values:", difficultiesValues);
-    console.log("Schedule Durations:", scheduleDurations);
-    console.log("Priority Values:", priorityValues);
-
-    document.addEventListener('DOMContentLoaded', function () {
-        // ECharts 인스턴스 생성
-        const myChart = echarts.init(document.getElementById('main'));
-
-        // 차트 옵션 설정
-        myChart.setOption({
-            title: {
-                text: '스트레스 비교'
-            },
-            tooltip: {},
-            xAxis: {
-                data: difficultiesValues.map((_, index) => 'Task ' + (index + 1)) // X축에 태스크 라벨
-            },
-            yAxis: {},
-            series: [
-                {
-                    name: 'Difficulty',
-                    type: 'bar',
-                    data: difficultiesValues // difficulties 배열의 값을 차트 데이터로 사용
-                }
-            ]
-        });
-
-        const priorityChart = echarts.init(document.getElementById('priority'));
-
-        priorityChart.setOption({
-            title: {
-                text: '우선순위 비교'
-            },
-            tooltip: {},
-            xAxis: {
-                data: priorityValues.map((_, index) => 'Task ' + (index + 1)) // X축에 태스크 라벨
-            },
-            yAxis: {},
-            series: [
-                {
-                    name: 'Priority',
-                    type: 'bar',
-                    data: priorityValues // priority 배열의 값을 차트 데이터로 사용
-                }
-            ]
-        });
-
-        const pieChart = echarts.init(document.getElementById('schedule-weight'));
-
-        pieChart.setOption({
-            title: {
-                text: '스케줄 비중'
-            },
-            tooltip: {
-                trigger: 'item',
-                formatter: function (params) {
-                    // 데이터 항목의 값과 비율을 포맷
-                    let value = params.value;
-                    let percentage = ((value / totalDuration) * 100).toFixed(1);
-                    return `${params.name}: ${percentage}%`;
-                }
-            },
-            legend: {
-                orient: 'vertical',
-                left: 'left'
-            },
-            series: [
-                {
-                    name: 'Schedules',
-                    type: 'pie',
-                    radius: '50%',
-                    data: scheduleDurations.map(item => ({
-                        value: item.value,
-                        name: item.name
-                    })),
-                    emphasis: {
-                        itemStyle: {
-                            shadowBlur: 10,
-                            shadowOffsetX: 0,
-                            shadowColor: 'rgba(0, 0, 0, 0.5)'
-                        }
-                    }
-                }
-            ]
-        });
+    pieData.push({
+      /* name: '휴식', */
+      value: totalRestTime,
+      itemStyle: { color: '#87CEFA' } // 휴식 시간의 색상 설정
     });
+
+    // 24시간 중 사용되지 않은 시간을 계산하여 공백으로 표시
+    pieData.push({
+      name: '공백',
+      value: 24 - totalAdjustTime - totalRestTime,
+      itemStyle: { color: 'rgba(211, 211, 211, 0.3)' } // 공백 시간의 색상 설정
+    });
+
+    // difficultiesValues에 스트레스 값 추가
+    difficultiesValues.push(schedule.stress);
+
+    // priorityValues에 중요도와 긴급도의 합계 추가
+    priorityValues.push(schedule.importance + schedule.urgency);
+  });
+
+  // 차트 옵션 설정
+  var pieOption = {
+    title: {
+      text: '24시간 시간대 분할 및 스케줄 표시',
+      left: 'center'
+    },
+    tooltip: {
+      trigger: 'item'
+    },
+    legend: {
+      orient: 'vertical',
+      left: '90%',
+      top: 'middle',
+      data: ['밤', '새벽', '아침', '점심', '저녁'],
+      textStyle: {
+        fontSize: 16
+      },
+      itemGap: 20,
+      padding: [10, 15, 10, 15]
+    },
+    polar: {
+      radius: ['0%', '70%']
+    },
+    angleAxis: {
+      type: 'category',
+      data: ['0시', '1시', '2시', '3시', '4시', '5시', '6시', '7시', '8시', '9시', '10시', '11시',
+        '12시', '13시', '14시', '15시', '16시', '17시', '18시', '19시', '20시', '21시', '22시', '23시'],
+      boundaryGap: false,
+      startAngle: 90,
+      clockwise: true,
+      axisLine: {
+        show: true,
+        lineStyle: { color: 'black', width: 2 }
+      },
+      axisTick: {
+        show: true,
+        length: 13,
+        lineStyle: { color: 'black', width: 1 }
+      },
+      axisLabel: {
+        show: true,
+        formatter: function(value) {
+          return value; // 시간대를 그대로 표시
+        }
+      }
+    },
+    radiusAxis: {
+      show: false
+    },
+    series: [
+      {
+        name: '시간대',
+        type: 'pie',
+        radius: ['70%', '80%'],
+        startAngle: 150,
+        label: { show: false },
+        itemStyle: {
+          borderType: 'solid',
+          borderColor: '#ccc',
+          color: function(params) {
+            var colorMap = {
+              '밤': 'rgba(0, 0, 255, 0.1)',
+              '새벽': 'rgba(0, 255, 255, 0.1)',
+              '아침': 'rgba(0, 255, 0, 0.1)',
+              '점심': 'rgba(255, 255, 0, 0.1)',
+              '저녁': 'rgba(255, 0, 0, 0.1)'
+            };
+            return colorMap[params.name];
+          }
+        },
+        data: [
+          { value: 6, name: '밤' },
+          { value: 5, name: '새벽' },
+          { value: 4, name: '아침' },
+          { value: 5, name: '점심' },
+          { value: 4, name: '저녁' }
+        ]
+      },
+      {
+        name: '스케줄',
+        type: 'pie',
+        radius: ['0%', '70%'],
+        startAngle: 150,
+        label: {
+          position: 'inside',
+          fontSize: 18,
+          formatter: '{b}: {c}시간'
+        },
+        data: pieData
+      }
+    ]
+  };
+
+  // 스트레스 비교 차트 옵션 설정
+  var stressOption = {
+    title: {
+      text: '스트레스 비교',
+      left: 'center',
+      textStyle: { fontSize: 30 }
+    },
+    xAxis: {
+      data: schedules.map(schedule => schedule.name),
+      axisLabel: { fontSize: 20 }
+    },
+    yAxis: {
+      axisLabel: { fontSize: 20 }
+    },
+    series: [{
+      name: 'Stress',
+      type: 'bar',
+      data: difficultiesValues,  // 스트레스 데이터를 설정
+      barWidth: '40%',
+      itemStyle: {
+        color: '#91CC75'
+      }
+    }]
+  };
+
+  // 우선순위 비교 차트 옵션 설정
+  var priorityOption = {
+    title: {
+      text: '우선순위 비교',
+      left: 'center',
+      textStyle: { fontSize: 30 }
+    },
+    xAxis: {
+      data: schedules.map(schedule => schedule.name),
+      axisLabel: { fontSize: 20 }
+    },
+    yAxis: {
+      axisLabel: { fontSize: 20 }
+    },
+    series: [{
+      name: 'Priority',
+      type: 'bar',
+      data: priorityValues,  // 우선순위 데이터를 설정
+      barWidth: '40%',
+      itemStyle: {
+        color: '#EE6666'
+      }
+    }]
+  };
+
+  // 차트 렌더링
+  var pieChart = echarts.init(document.getElementById('pie-chart'));
+  pieChart.setOption(pieOption);
+
+  var stressChart = echarts.init(document.getElementById('main'));
+  stressChart.setOption(stressOption);
+
+  var priorityChart = echarts.init(document.getElementById('priority'));
+  priorityChart.setOption(priorityOption);
 </script>
+
 </body>
 </html>

@@ -5,6 +5,7 @@
     <title>Calendar</title>
     <link rel="stylesheet" href="/css/header.css"> <!-- 헤더 CSS 파일 -->
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+    <script src="/js/header.js" defer></script>
 
     <style>
         /* 돌아가기 버튼 컨테이너 스타일 */
@@ -34,7 +35,9 @@
 
 <!-- 헤더 섹션 추가 -->
 <div class="header">
-    <h1>Plan Optima</h1>
+    <h1>
+        <a th:href="@{/}" style="color: white; text-decoration: none;">Plan Optima</a>
+    </h1>
     <div class="spacer"></div>
     <ul class="menu">
         <li><a href="/cabinet">Cabinet</a></li>
@@ -104,15 +107,21 @@
                 // 랜덤 색상 생성
                 const color = getRandomColor();
 
-                // 각 일정 객체를 FullCalendar 이벤트로 변환
-                return dto.selectedDates.map(date => ({
-                    title: dto.title,
-                    start: date,
-                    end: date,
-                    color: color // 랜덤 색상 설정
-                }));
+                // selectedDates가 배열인지 확인
+                if (Array.isArray(dto.selectedDates)) {
+                    return dto.selectedDates.map(date => ({
+                        title: dto.title,
+                        start: date,
+                        end: date,
+                        color: color // 랜덤 색상 설정
+                    }));
+                } else {
+                    console.warn(`Expected selectedDates to be an array, but got ${typeof dto.selectedDates}`);
+                    return []; // 빈 배열 반환
+                }
             })
         });
+
 
         // 캘린더 렌더링
         calendar.render();

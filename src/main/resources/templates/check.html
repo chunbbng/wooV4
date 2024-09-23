@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="/css/header.css">
+    <title>Check Your Schedule</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+        .schedule-container {
+            display: block;
+            width: 100%;
+            text-align: center;
+        }
+        .schedule {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .schedule h3 {
+            width: 150px;
+            text-align: right;
+            margin-right: 20px;
+        }
+        .date-box-container {
+            display: flex;
+        }
+        .date-box {
+            width: 30px;
+            height: 30px;
+            margin: 5px;
+            background-color: red;
+            position: relative;
+        }
+        .date-box.checked {
+            background-color: green;
+        }
+        .date-box:hover::after {
+            content: attr(data-date);
+            position: absolute;
+            top: -25px;
+            left: 0;
+            background-color: black;
+            color: white;
+            padding: 3px;
+            font-size: 12px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 헤더 부분은 유지 -->
+<div th:fragment="header">
+    <div class="header">
+        <h1>
+            <a th:href="@{/}" style="color: white; text-decoration: none;">Plan Optima</a>
+        </h1>
+        <div class="spacer"></div>
+        <ul class="menu">
+            <li><a th:href="@{/cabinet}">Cabinet</a></li>
+            <li><a href="/calendar">Calendar</a></li>
+            <li><a href="/check">Check</a></li>
+            <li><a href="#">About</a></li>
+        </ul>
+    </div>
+</div>
+<div id="headerLogout" class="logout-button">로그아웃</div>
+
+<!-- 스케줄 부분 -->
+<h1>Check Your Schedule</h1>
+<div class="schedule-container" th:each="schedule : ${schedules}">
+    <div th:if="${schedule.selectedDates.size() > 0}" class="schedule">
+        <h3 th:text="${schedule.name}"></h3>
+        <div class="date-box-container" th:each="date : ${schedule.selectedDates}">
+            <div class="date-box" th:data-date="${date}" onclick="toggleCheck(this)">
+                <!-- 클릭 시 체크 상태 변경 -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 페이지 로드 시 체크 상태 복원
+    document.addEventListener('DOMContentLoaded', function() {
+        const dateBoxes = document.querySelectorAll('.date-box');
+        dateBoxes.forEach(function(box) {
+            const date = box.getAttribute('data-date');
+            const isChecked = localStorage.getItem(date) === 'true';
+            if (isChecked) {
+                box.classList.add('checked');
+            }
+        });
+    });
+
+    function toggleCheck(element) {
+        // 체크 상태 토글
+        element.classList.toggle('checked');
+
+        // 날짜와 체크 상태 저장
+        const date = element.getAttribute('data-date');
+        const isChecked = element.classList.contains('checked');
+
+        // 로컬 스토리지에 상태 저장
+        localStorage.setItem(date, isChecked);
+    }
+</script>
+
+
+</body>
+</html>

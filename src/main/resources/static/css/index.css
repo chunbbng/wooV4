@@ -47,6 +47,43 @@
     border-radius: 5px; /* 모서리를 둥글게 */
 }
 
+/* 휴식 시간 선택 요소의 크기 및 모양 조정 */
+.rest-time-preference {
+    display: flex; /* 가로 정렬 */
+    gap: 10px; /* 옵션들 사이 간격 */
+}
+
+.rest-option {
+    font-size: 20px; /* 글자 크기 */
+    padding: 15px 25px; /* 내부 여백 */
+    border-radius: 8px; /* 모서리를 둥글게 */
+    cursor: pointer; /* 마우스를 올렸을 때 포인터로 변경 */
+    transition: background-color 0.3s ease; /* 배경색 전환 애니메이션 */
+    background-color: #f0f0f0; /* 기본 배경색 */
+    border: 1px solid #ccc; /* 기본 테두리 */
+    color: #000; /* 글자 색상 어두운 색으로 변경 */
+}
+
+/* 선택된 휴식 시간의 스타일 */
+.rest-option.selected {
+    background-color: #20a3ee; /* 선택된 배경색 */
+    color: #fff; /* 선택된 글자 색상 */
+}
+
+/* 선호 시간대 선택 요소의 크기 조정 */
+.time-preference .time-option {
+    font-size: 20px; /* 시간대 옵션의 글자 크기 */
+    padding: 15px 25px; /* 시간대 옵션의 내부 여백 */
+    border-radius: 8px; /* 모서리를 둥글게 */
+    cursor: pointer; /* 마우스를 올렸을 때 포인터로 변경 */
+    transition: background-color 0.3s ease; /* 배경색 전환 애니메이션 */
+}
+
+.time-preference .time-option.selected {
+    background-color: #20a3ee; /* 선택된 시간대의 배경색 */
+    color: #fff; /* 선택된 시간대의 글자 색상 */
+}
+
 /* 선호 시간대 선택 요소의 크기 조정 */
 .time-preference .time-option {
     font-size: 20px; /* 시간대 옵션의 글자 크기 */
@@ -204,4 +241,20 @@
     cursor: pointer;
     transition: background-color 0.3s, border-color 0.3s;
     border-radius: 5px; /* 테두리에 약간의 둥근 모서리 추가 */
+}
+
+.center-submit {
+    display: block;
+    margin: 20px auto; /* 화면 중앙에 배치 (자동 좌우 여백) */
+    padding: 10px 20px; /* 버튼에 여백 추가 */
+    font-size: 16px; /* 버튼 글꼴 크기 */
+    background-color: #4CAF50; /* 버튼 배경색 */
+    color: white; /* 버튼 글자색 */
+    border: none;
+    border-radius: 5px; /* 버튼 모서리 둥글게 */
+    cursor: pointer; /* 커서를 포인터로 변경 */
+}
+
+.center-submit:hover {
+    background-color: #45a049; /* 마우스 오버 시 배경색 변경 */
 }

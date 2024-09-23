@@ -132,13 +132,6 @@ public class HomeController {
             return "redirect:/errorPage"; // 에러 시 리다이렉트
         }
     }
-
-    @GetMapping("/check")
-    public String check(Model model) {
-        model.addAttribute("pageTitle", "Check 페이지 입니다.");
-        return "check";
-    }
-
     @GetMapping("/about")
     public String about(Model model) {
         model.addAttribute("pageTitle", "About 페이지 입니다.");
@@ -152,19 +145,19 @@ public class HomeController {
         model.addAttribute("adjustDays", schedule.getAdjustDays());
         model.addAttribute("adjustTime", schedule.getAdjustTime());
 
-        // 세션에서 "member" 키로 사용자 정보를 가져옴
+        // Fetch user from session, if available
         Member loginMember = (Member) sessionManager.getSession(request, "member");
+
         if (loginMember == null) {
             logger.warn("세션에 LOGIN_MEMBER 정보가 없음.");
-            return "redirect:/login";
+            model.addAttribute("loginMember", null); // Ensure null is passed
+        } else {
+            model.addAttribute("loginMember", loginMember);
         }
-
-        model.addAttribute("schedule", schedule);
-        model.addAttribute("loginMember", loginMember);
-        logger.info("세션 확인: 사용자 ID = {}", loginMember.getId());
 
         return "result_ts";
     }
+
 
 
 }

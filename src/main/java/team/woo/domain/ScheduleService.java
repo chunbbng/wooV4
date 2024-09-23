@@ -8,7 +8,9 @@ import team.woo.member.Member;
 import team.woo.member.MemberRepository;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -71,10 +73,13 @@ public class ScheduleService {
         return scheduleRepository.save(schedule);  // 스케줄 저장
     }
 
+
     // 기존의 스케줄 정보 가져오는 메서드
     @Transactional(readOnly = true)
     public Schedule getScheduleById(Long scheduleId) {
         return scheduleRepository.findById(scheduleId)
                 .orElseThrow(() -> new IllegalArgumentException("Schedule not found with ID: " + scheduleId));
     }
+
+
 }

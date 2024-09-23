@@ -231,3 +231,14 @@ body {
     text-align: center;
 }
 
+.header h1 a {
+    color: white;
+    text-decoration: none;
+}
+
+.header h1 a:visited {
+    color: white;
+    text-decoration: none;
+}
+
+

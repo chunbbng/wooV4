@@ -8,18 +8,21 @@
     <link rel="stylesheet" href="/css/index.css">
     <link rel="stylesheet" href="/css/header.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="/js/header.js" defer></script>
 </head>
 
 <body>
 <!-- 헤더 섹션 -->
 <div th:fragment="header">
     <div class="header">
-        <h1>Plan Optima</h1>
+        <h1>
+            <a th:href="@{/}" style="color: white; text-decoration: none;">Plan Optima</a>
+        </h1>
         <div class="spacer"></div>
         <ul class="menu">
             <li><a th:href="@{/cabinet}">Cabinet</a></li>
             <li><a href="/calendar">Calendar</a></li>
-            <li><a href="#">Check</a></li>
+            <li><a href="/check">Check</a></li>
             <li><a href="#">About</a></li>
         </ul>
     </div>
@@ -87,8 +90,15 @@
     </div>
     <div class="form-group">
         <label class="question-icon">원하는 휴식시간 정도?</label>
-        <input type="text" id="restTime" name="restTime" autocomplete="off" required>
+        <div class="rest-time-preference">
+            <div class="rest-option" data-time="30분">30분</div>
+            <div class="rest-option" data-time="1시간">1시간</div>
+            <div class="rest-option" data-time="1시간 30분">1시간 30분</div>
+            <div class="rest-option" data-time="2시간">2시간</div>
+        </div>
+        <input type="hidden" id="restTime" name="restTime" required>
     </div>
+
     <div class="form-group">
         <label class="question-icon">내가 생각하는 우선순위?</label>
         <canvas id="priorityCanvas" width="400" height="400"></canvas>
@@ -115,7 +125,7 @@
         <input type="hidden" id="preferenceTime" name="preferenceTime" required>
     </div>
     <div>
-        <button type="submit">제출</button>
+        <button type="submit" class="center-submit">제출</button>
     </div>
 </form>
 

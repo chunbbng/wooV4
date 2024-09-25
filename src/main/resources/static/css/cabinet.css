@@ -126,3 +126,55 @@ h1 {
     border-width: 3px;
     border-color: #888;
 }
+
+/* 체크모드 버튼 스타일 */
+#toggle-check-mode {
+    font-size: 20px; /* 버튼 글자 크기 */
+    padding: 12px 24px; /* 버튼의 내부 여백 */
+    margin: 20px 0; /* 위 아래 간격 추가 */
+    background-color: #3498db; /* 버튼 배경색 */
+    color: white; /* 글자 색상 */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#toggle-check-mode:hover {
+    background-color: #2980b9; /* 버튼 호버 시 색상 변경 */
+}
+
+/* 선택된 항목 병합하기 버튼 스타일 */
+#process-selection {
+    font-size: 18px; /* 버튼 글자 크기 */
+    padding: 12px 24px; /* 버튼의 내부 여백 */
+    margin-top: 20px; /* 위 버튼과의 간격 추가 */
+    margin-right: 10px; /* 오른쪽 여백 추가 */
+    background-color: #2ecc71; /* 병합 버튼 배경색 */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#process-selection:hover {
+    background-color: #27ae60; /* 버튼 호버 시 색상 변경 */
+}
+
+/* 선택된 스케줄 삭제 버튼 스타일 */
+#delete-selection {
+    font-size: 18px; /* 버튼 글자 크기 */
+    padding: 12px 24px; /* 버튼의 내부 여백 */
+    margin-top: 10px; /* 병합 버튼과 간격 추가 */
+    background-color: #e74c3c; /* 삭제 버튼 배경색 */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#delete-selection:hover {
+    background-color: #c0392b; /* 버튼 호버 시 색상 변경 */
+}

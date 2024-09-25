@@ -110,8 +110,8 @@ public class MemberController {
 
     @Getter
     static class LoginStatusResponse {
-        private boolean loggedIn;
-        private String name;
+        private final boolean loggedIn;
+        private final String name;
 
         public LoginStatusResponse(boolean loggedIn, String name) {
             this.loggedIn = loggedIn;

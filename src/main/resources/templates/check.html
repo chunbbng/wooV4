@@ -5,31 +5,44 @@
     <title>Check Your Schedule</title>
     <style>
         body {
-            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             font-family: Arial, sans-serif;
+            font-size: 18px; /* 모든 글자 크기 키우기 */
+            height: 100vh;
+            margin: 0;
+        }
+        h1 {
+            font-size: 36px; /* "Check Your Schedule" 글자 크기 키우기 */
         }
         .schedule-container {
-            display: block;
             width: 100%;
-            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* 스케줄들을 중앙으로 정렬 */
+            margin-top: 50px; /* "Check Your Schedule"와 스케줄 간의 간격 */
         }
         .schedule {
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 30px; /* 스케줄 간의 간격을 더 띄우기 */
+            margin-left: -30px; /* 스케줄을 왼쪽으로 당기기 */
         }
         .schedule h3 {
             width: 150px;
             text-align: right;
             margin-right: 20px;
+            font-size: 24px; /* 스케줄 이름 크기 키우기 */
         }
         .date-box-container {
             display: flex;
         }
         .date-box {
-            width: 30px;
-            height: 30px;
+            width: 40px; /* 박스 크기 조금 키우기 */
+            height: 40px;
             margin: 5px;
             background-color: red;
             position: relative;
@@ -45,7 +58,7 @@
             background-color: black;
             color: white;
             padding: 3px;
-            font-size: 12px;
+            font-size: 14px;
             border-radius: 5px;
         }
     </style>
